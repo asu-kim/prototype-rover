@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motor Control with Images</title>
+    <style>
+        .control-image {
+            width: 150px;
+            height: 100px;
+            cursor: pointer;
+            margin: 10px;
+        }
+    </style>
+    <script>
+        let moveInterval;
+
+        function sendDirection(direction) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/move", true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send("direction=" + direction);
+        }
+
+        function startMoving(direction) {
+            stopMoving();  // Ensure any previous movement is stopped
+            moveInterval = setInterval(function() {
+                sendDirection(direction);
+            }, 100);  // Send the request every 100ms
+        }
+
+        function stopMoving() {
+            if (moveInterval) {
+                clearInterval(moveInterval);
+                sendDirection('stop');  // Stop the robot when button is released
+                moveInterval = null;
+            }
+        }
+
+        // Add event listeners to stop moving if the mouse or touch moves away from the images
+        document.addEventListener('mouseup', stopMoving);
+        document.addEventListener('touchend', stopMoving);
+    </script>
+</head>
+<body>
+    <h1>Control the Robot</h1>
+    <div>
+        <!-- Forward Button -->
+        <img src="/static/forward.jpg" class="control-image" 
+            onmousedown="startMoving('forward')" 
+            onmouseup="stopMoving()" 
+            ontouchstart="startMoving('forward')" 
+            ontouchend="stopMoving()" alt="Forward">
+    </div>
+    <div>
+        <!-- Left Button -->
+        <img src="/static/left.jpg" class="control-image" 
+            onmousedown="startMoving('left')" 
+            onmouseup="stopMoving()" 
+            ontouchstart="startMoving('left')" 
+            ontouchend="stopMoving()" alt="Left">
+
+        <!-- Right Button -->
+        <img src="/static/right.jpg" class="control-image" 
+            onmousedown="startMoving('right')" 
+            onmouseup="stopMoving()" 
+            ontouchstart="startMoving('right')" 
+            ontouchend="stopMoving()" alt="Right">
+    </div>
+    <div>
+        <!-- Backward Button -->
+        <img src="/static/backward.jpg" class="control-image" 
+            onmousedown="startMoving('backward')" 
+            onmouseup="stopMoving()" 
+            ontouchstart="startMoving('backward')" 
+            ontouchend="stopMoving()" alt="Backward">
+    </div>
+</body>
+</html>
