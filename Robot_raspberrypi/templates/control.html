@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motor Control with Images</title>
+    <title>Motor Control with Steering and Speed Sliders</title>
     <style>
         .control-image {
             width: 150px;
@@ -11,21 +11,38 @@
             cursor: pointer;
             margin: 10px;
         }
+
+        .steering-slider, .speed-slider {
+            width: 300px;
+            margin: 20px auto;
+        }
+
+        body {
+            text-align: center;
+        }
     </style>
     <script>
         let moveInterval;
+        let steeringSpeed = 50;  // Default speed for steering wheel (front wheels)
+        let backwardSpeed = 50;  // Fixed speed for backward movement (can be adjusted)
 
-        function sendDirection(direction) {
+        function sendDirection(direction, speed = 0) {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/move", true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.send("direction=" + direction);
+            xhr.send("direction=" + direction + "&speed=" + speed);  // Send direction and speed
         }
 
         function startMoving(direction) {
             stopMoving();  // Ensure any previous movement is stopped
+            let speed = 50;  // Default speed for forward/backward
+
+            if (direction === 'backward') {
+                speed = backwardSpeed;  // Use fixed speed for backward movement
+            }
+
             moveInterval = setInterval(function() {
-                sendDirection(direction);
+                sendDirection(direction, speed);
             }, 100);  // Send the request every 100ms
         }
 
@@ -37,43 +54,70 @@
             }
         }
 
-        // Add event listeners to stop moving if the mouse or touch moves away from the images
-        document.addEventListener('mouseup', stopMoving);
-        document.addEventListener('touchend', stopMoving);
+        // Handle steering control through the slider
+        function controlSteering(value) {
+            // Send motor control commands based on the steering value
+            let direction = 'stop';
+            let speed = steeringSpeed;  // Use steering speed from the slider
+
+            if (value > 0) {
+                direction = 'right';  // Turn right with corresponding speed
+            } else if (value < 0) {
+                direction = 'left';  // Turn left with corresponding speed
+            }
+
+            sendDirection(direction, speed);
+        }
+
+        // Function to update the speed for the steering wheels (front wheels)
+        function updateSteeringSpeed(value) {
+            steeringSpeed = value;
+            document.getElementById('steering-speed-display').textContent = value;
+        }
+
+        // Disable context menu on long press for forward/backward buttons
+        function disableContextMenu(event) {
+            event.preventDefault();  // Prevent the default context menu from showing
+        }
+
     </script>
 </head>
 <body>
     <h1>Control the Robot</h1>
-    <div>
-        <!-- Forward Button -->
-        <img src="/static/forward.jpg" class="control-image" 
+
+    <!-- Forward Button -->
+    <div style="text-align: center;">
+        <img src="/static/Forward.jpg" class="control-image" 
             onmousedown="startMoving('forward')" 
             onmouseup="stopMoving()" 
             ontouchstart="startMoving('forward')" 
-            ontouchend="stopMoving()" alt="Forward">
+            ontouchend="stopMoving()" 
+            oncontextmenu="disableContextMenu(event)" alt="Forward">
     </div>
-    <div>
-        <!-- Left Button -->
-        <img src="/static/left.jpg" class="control-image" 
-            onmousedown="startMoving('left')" 
-            onmouseup="stopMoving()" 
-            ontouchstart="startMoving('left')" 
-            ontouchend="stopMoving()" alt="Left">
 
-        <!-- Right Button -->
-        <img src="/static/right.jpg" class="control-image" 
-            onmousedown="startMoving('right')" 
-            onmouseup="stopMoving()" 
-            ontouchstart="startMoving('right')" 
-            ontouchend="stopMoving()" alt="Right">
-    </div>
-    <div>
-        <!-- Backward Button -->
-        <img src="/static/backward.jpg" class="control-image" 
+    <!-- Backward Button -->
+    <div style="text-align: center;">
+        <img src="/static/Backward.jpg" class="control-image" 
             onmousedown="startMoving('backward')" 
             onmouseup="stopMoving()" 
             ontouchstart="startMoving('backward')" 
-            ontouchend="stopMoving()" alt="Backward">
+            ontouchend="stopMoving()" 
+            oncontextmenu="disableContextMenu(event)" alt="Backward">
+    </div>
+
+    <!-- Steering Speed Slider -->
+    <div>
+        <h2>Steering Wheel Speed Control (Front Wheels)</h2>
+        <input type="range" min="0" max="100" value="50" class="speed-slider" 
+            oninput="updateSteeringSpeed(this.value)">
+        <p>Steering Speed: <span id="steering-speed-display">50</span></p>
+    </div>
+
+    <!-- Slider for Steering -->
+    <div>
+        <h2>Steering Control (Direction)</h2>
+        <input type="range" min="-25" max="25" value="0" class="steering-slider" 
+            oninput="controlSteering(this.value)">
     </div>
 </body>
 </html>
