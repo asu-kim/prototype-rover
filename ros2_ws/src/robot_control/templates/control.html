@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motor Control</title>
+    <style>
+        .control-image {
+            width: 150px;
+            height: 100px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .slider {
+            width: 300px;
+            margin: 20px auto;
+        }
+        body {
+            text-align: center;
+        }
+    </style>
+    <script>
+        function sendCommand(direction, speed = 0) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/move", true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send(`direction=${direction}&speed=${speed}`);
+        }
+
+        function startMove(direction) {
+            sendCommand(direction, 50);
+        }
+
+        function stopMove() {
+            sendCommand('stop');
+        }
+    </script>
+</head>
+<body>
+    <h1>Control the Robot</h1>
+    <div>
+        <img src="{{ url_for('static', filename='forward.jpg') }}" 
+            class="control-image" 
+            onmousedown="startMove('forward')" 
+            onmouseup="stopMove()" 
+            alt="Forward">
+    </div>
+    <div>
+        <img src="{{ url_for('static', filename='backward.jpg') }}" 
+            class="control-image" 
+            onmousedown="startMove('backward')" 
+            onmouseup="stopMove()" 
+            alt="Backward">
+    </div>
+</body>
+</html>
