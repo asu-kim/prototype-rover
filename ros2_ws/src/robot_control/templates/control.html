@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motor Control</title>
+    <title>Robot Control</title>
     <style>
         .control-image {
             width: 150px;
@@ -11,28 +11,41 @@
             cursor: pointer;
             margin: 10px;
         }
-        .slider {
+        .slider-container {
             width: 300px;
             margin: 20px auto;
+            text-align: center;
+        }
+        .slider-label {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .slider {
+            width: 100%;
         }
         body {
             text-align: center;
         }
     </style>
     <script>
-        function sendCommand(direction, speed = 0) {
+        function sendCommand(action, value = 0) {
             const xhr = new XMLHttpRequest();
             xhr.open("POST", "/move", true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.send(`direction=${direction}&speed=${speed}`);
+            xhr.send(`action=${action}&value=${value}`);
         }
 
         function startMove(direction) {
-            sendCommand(direction, 50);
+            sendCommand('move', direction);
         }
 
         function stopMove() {
-            sendCommand('stop');
+            sendCommand('move', 'stop');
+        }
+
+        function updateSlider(action, sliderId) {
+            const slider = document.getElementById(sliderId);
+            sendCommand(action, slider.value);
         }
     </script>
 </head>
@@ -44,13 +57,21 @@
             onmousedown="startMove('forward')" 
             onmouseup="stopMove()" 
             alt="Forward">
-    </div>
-    <div>
         <img src="{{ url_for('static', filename='backward.jpg') }}" 
             class="control-image" 
             onmousedown="startMove('backward')" 
             onmouseup="stopMove()" 
             alt="Backward">
+    </div>
+    <div class="slider-container">
+        <div class="slider-label">Speed Control</div>
+        <input type="range" id="speed-slider" class="slider" min="0" max="100" value="50" 
+               oninput="updateSlider('speed', 'speed-slider')">
+    </div>
+    <div class="slider-container">
+        <div class="slider-label">Turn Control</div>
+        <input type="range" id="turn-slider" class="slider" min="-50" max="50" value="0" 
+               oninput="updateSlider('turn', 'turn-slider')">
     </div>
 </body>
 </html>

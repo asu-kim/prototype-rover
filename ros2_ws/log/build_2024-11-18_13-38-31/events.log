@@ -1,0 +1,88 @@
+[0.000000] (-) TimerEvent: {}
+[0.001230] (robot_control) JobQueued: {'identifier': 'robot_control', 'dependencies': OrderedDict()}
+[0.001453] (robot_control) JobStarted: {'identifier': 'robot_control'}
+[0.098068] (-) TimerEvent: {}
+[0.198802] (-) TimerEvent: {}
+[0.299798] (-) TimerEvent: {}
+[0.400554] (-) TimerEvent: {}
+[0.501144] (-) TimerEvent: {}
+[0.601732] (-) TimerEvent: {}
+[0.702329] (-) TimerEvent: {}
+[0.802944] (-) TimerEvent: {}
+[0.903558] (-) TimerEvent: {}
+[1.004190] (-) TimerEvent: {}
+[1.104817] (-) TimerEvent: {}
+[1.205495] (-) TimerEvent: {}
+[1.306282] (-) TimerEvent: {}
+[1.406915] (-) TimerEvent: {}
+[1.507628] (-) TimerEvent: {}
+[1.608351] (-) TimerEvent: {}
+[1.708937] (-) TimerEvent: {}
+[1.809566] (-) TimerEvent: {}
+[1.910154] (-) TimerEvent: {}
+[2.010748] (-) TimerEvent: {}
+[2.111345] (-) TimerEvent: {}
+[2.211964] (-) TimerEvent: {}
+[2.312561] (-) TimerEvent: {}
+[2.413170] (-) TimerEvent: {}
+[2.513766] (-) TimerEvent: {}
+[2.614571] (-) TimerEvent: {}
+[2.715576] (-) TimerEvent: {}
+[2.805440] (robot_control) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/pk/Toy-car/ros2_ws/build/robot_control/build', '--no-deps', 'symlink_data'], 'cwd': '/home/pk/Toy-car/ros2_ws/build/robot_control', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'pk', 'SSH_CLIENT': '192.168.6.141 58669 22', 'XDG_SESSION_TYPE': 'tty', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib', 'MOTD_SHOWN': 'pam', 'HOME': '/home/pk', 'OLDPWD': '/home/pk', 'SSH_TTY': '/dev/pts/0', 'ROS_PYTHON_VERSION': '3', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLCON_PREFIX_PATH': '/home/pk/Toy-car/ros2_ws/install', 'ROS_DISTRO': 'humble', 'LOGNAME': 'pk', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'TERM': 'xterm', 'XDG_SESSION_ID': '6', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'XDG_RUNTIME_DIR': '/run/user/1000', 'LANG': 'en_US.UTF-8', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'AMENT_PREFIX_PATH': '/home/pk/Toy-car/ros2_ws/install/robot_control:/opt/ros/humble', 'SHELL': '/bin/bash', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'PWD': '/home/pk/Toy-car/ros2_ws/build/robot_control', 'SSH_CONNECTION': '192.168.6.141 58669 192.168.6.54 22', 'XDG_DATA_DIRS': '/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/pk/Toy-car/ros2_ws/build/robot_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/pk/Toy-car/ros2_ws/install/robot_control/lib/python3.10/site-packages:/home/pk/Toy-car/ros2_ws/build/robot_control:/home/pk/Toy-car/ros2_ws/install/robot_control/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1'}, 'shell': False}
+[2.817573] (-) TimerEvent: {}
+[2.920422] (-) TimerEvent: {}
+[3.021063] (-) TimerEvent: {}
+[3.121691] (-) TimerEvent: {}
+[3.222311] (-) TimerEvent: {}
+[3.322908] (-) TimerEvent: {}
+[3.423495] (-) TimerEvent: {}
+[3.524156] (-) TimerEvent: {}
+[3.624787] (-) TimerEvent: {}
+[3.725388] (-) TimerEvent: {}
+[3.825998] (-) TimerEvent: {}
+[3.926591] (-) TimerEvent: {}
+[3.980280] (robot_control) StdoutLine: {'line': b'running develop\n'}
+[3.981709] (robot_control) StderrLine: {'line': b'/usr/lib/python3/dist-packages/setuptools/command/easy_install.py:158: EasyInstallDeprecationWarning: easy_install command is deprecated. Use build and pip and other standards-based tools.\n'}
+[3.982269] (robot_control) StderrLine: {'line': b'  warnings.warn(\n'}
+[4.026752] (-) TimerEvent: {}
+[4.127340] (-) TimerEvent: {}
+[4.227968] (-) TimerEvent: {}
+[4.328561] (-) TimerEvent: {}
+[4.429154] (-) TimerEvent: {}
+[4.529742] (-) TimerEvent: {}
+[4.630381] (-) TimerEvent: {}
+[4.731054] (-) TimerEvent: {}
+[4.742090] (robot_control) StdoutLine: {'line': b'running egg_info\n'}
+[4.742648] (robot_control) StdoutLine: {'line': b'creating robot_control.egg-info\n'}
+[4.743135] (robot_control) StdoutLine: {'line': b'writing robot_control.egg-info/PKG-INFO\n'}
+[4.744245] (robot_control) StdoutLine: {'line': b'writing dependency_links to robot_control.egg-info/dependency_links.txt\n'}
+[4.744858] (robot_control) StdoutLine: {'line': b'writing entry points to robot_control.egg-info/entry_points.txt\n'}
+[4.745368] (robot_control) StdoutLine: {'line': b'writing requirements to robot_control.egg-info/requires.txt\n'}
+[4.745835] (robot_control) StdoutLine: {'line': b'writing top-level names to robot_control.egg-info/top_level.txt\n'}
+[4.746689] (robot_control) StdoutLine: {'line': b"writing manifest file 'robot_control.egg-info/SOURCES.txt'\n"}
+[4.753492] (robot_control) StdoutLine: {'line': b"reading manifest file 'robot_control.egg-info/SOURCES.txt'\n"}
+[4.756183] (robot_control) StdoutLine: {'line': b"writing manifest file 'robot_control.egg-info/SOURCES.txt'\n"}
+[4.762038] (robot_control) StdoutLine: {'line': b'running build_ext\n'}
+[4.762823] (robot_control) StdoutLine: {'line': b'Creating /home/pk/Toy-car/ros2_ws/install/robot_control/lib/python3.10/site-packages/robot-control.egg-link (link to .)\n'}
+[4.766013] (robot_control) StdoutLine: {'line': b'Installing gpio_control script to /home/pk/Toy-car/ros2_ws/install/robot_control/lib/robot_control\n'}
+[4.766768] (robot_control) StdoutLine: {'line': b'Installing web_server script to /home/pk/Toy-car/ros2_ws/install/robot_control/lib/robot_control\n'}
+[4.767920] (robot_control) StdoutLine: {'line': b'\n'}
+[4.768474] (robot_control) StdoutLine: {'line': b'Installed /home/pk/Toy-car/ros2_ws/build/robot_control\n'}
+[4.768999] (robot_control) StdoutLine: {'line': b'running symlink_data\n'}
+[4.769445] (robot_control) StdoutLine: {'line': b'creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/ament_index\n'}
+[4.769883] (robot_control) StdoutLine: {'line': b'creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/ament_index/resource_index\n'}
+[4.770311] (robot_control) StdoutLine: {'line': b'creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/ament_index/resource_index/packages\n'}
+[4.770750] (robot_control) StdoutLine: {'line': b'symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/resource/robot_control -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/ament_index/resource_index/packages\n'}
+[4.771186] (robot_control) StdoutLine: {'line': b'symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/package.xml -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control\n'}
+[4.771665] (robot_control) StdoutLine: {'line': b'creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/launch\n'}
+[4.772176] (robot_control) StdoutLine: {'line': b'symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/launch/robot_control_launch.py -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/launch\n'}
+[4.772637] (robot_control) StdoutLine: {'line': b'creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/templates\n'}
+[4.773063] (robot_control) StdoutLine: {'line': b'symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/templates/control.html -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/templates\n'}
+[4.773519] (robot_control) StdoutLine: {'line': b'creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/static\n'}
+[4.774277] (robot_control) StdoutLine: {'line': b'symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/static/forward.jpg -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/static\n'}
+[4.775142] (robot_control) StdoutLine: {'line': b'symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/static/backward.jpg -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/static\n'}
+[4.831447] (-) TimerEvent: {}
+[4.904751] (robot_control) CommandEnded: {'returncode': 0}
+[4.931562] (-) TimerEvent: {}
+[4.954852] (robot_control) JobEnded: {'identifier': 'robot_control', 'rc': 0}
+[4.957380] (-) EventReactorShutdown: {}
