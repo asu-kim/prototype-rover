@@ -11,12 +11,6 @@
             cursor: pointer;
             margin: 10px;
         }
-        .control-button {
-            padding: 10px 20px;
-            margin: 10px;
-            font-size: 16px;
-            cursor: pointer;
-        }
         .slider-container {
             width: 300px;
             margin: 20px auto;
@@ -41,13 +35,6 @@
             xhr.send(`action=${action}&value=${value}`);
         }
 
-        function sendRecordCommand(action) {
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/record", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.send(`action=${action}`);
-        }
-
         function startMove(direction) {
             sendCommand('move', direction);
         }
@@ -63,7 +50,7 @@
     </script>
 </head>
 <body>
-    <h1>Robot Control with Recording</h1>
+    <h1>Control the Robot</h1>
     <div>
         <img src="{{ url_for('static', filename='forward.jpg') }}" 
             class="control-image" 
@@ -85,10 +72,6 @@
         <div class="slider-label">Turn Control</div>
         <input type="range" id="turn-slider" class="slider" min="-50" max="50" value="0" 
                oninput="updateSlider('turn', 'turn-slider')">
-    </div>
-    <div>
-        <button class="control-button" onclick="sendRecordCommand('start')">Start Recording</button>
-        <button class="control-button" onclick="sendRecordCommand('stop')">Stop Recording</button>
     </div>
 </body>
 </html>
