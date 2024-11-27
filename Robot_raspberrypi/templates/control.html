@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motor and Camera Control</title>
+    <title>Motor Control with Steering and Speed Sliders</title>
     <style>
         .control-image {
             width: 150px;
@@ -11,26 +11,38 @@
             cursor: pointer;
             margin: 10px;
         }
+
+        .steering-slider, .speed-slider {
+            width: 300px;
+            margin: 20px auto;
+        }
+
         body {
             text-align: center;
         }
     </style>
     <script>
         let moveInterval;
-        let speed = 50;  // Default speed
-        let steering = 0;  // Default steering (centered)
+        let steeringSpeed = 50;  // Default speed for steering wheel (front wheels)
+        let backwardSpeed = 50;  // Fixed speed for backward movement (can be adjusted)
 
-        function sendDirection(direction) {
+        function sendDirection(direction, speed = 0) {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/move", true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.send(`direction=${direction}&speed=${speed}&steering=${steering}`);
+            xhr.send("direction=" + direction + "&speed=" + speed);  // Send direction and speed
         }
 
         function startMoving(direction) {
             stopMoving();  // Ensure any previous movement is stopped
-            moveInterval = setInterval(function () {
-                sendDirection(direction);
+            let speed = 50;  // Default speed for forward/backward
+
+            if (direction === 'backward') {
+                speed = backwardSpeed;  // Use fixed speed for backward movement
+            }
+
+            moveInterval = setInterval(function() {
+                sendDirection(direction, speed);
             }, 100);  // Send the request every 100ms
         }
 
@@ -42,77 +54,92 @@
             }
         }
 
-        function updateSpeed(value) {
-            speed = value;
-            document.getElementById("speed-display").textContent = value;
+        // Handle steering control through the slider
+        function controlSteering(value) {
+            // Send motor control commands based on the steering value
+            let direction = 'stop';
+            let speed = steeringSpeed;  // Use steering speed from the slider
+
+            if (value > 0) {
+                direction = 'right';  // Turn right with corresponding speed
+            } else if (value < 0) {
+                direction = 'left';  // Turn left with corresponding speed
+            }
+
+            sendDirection(direction, speed);
         }
 
-        function updateSteering(value) {
-            steering = value;
-            document.getElementById("steering-display").textContent = value;
+        // Function to update the speed for the steering wheels (front wheels)
+        function updateSteeringSpeed(value) {
+            steeringSpeed = value;
+            document.getElementById('steering-speed-display').textContent = value;
         }
 
-        function startRecording() {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/record", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.send("action=start");
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    alert("Recording started");
-                } else {
-                    alert("Error starting recording: " + xhr.responseText);
-                }
-            };
+        // Disable context menu on long press for forward/backward buttons
+        function disableContextMenu(event) {
+            event.preventDefault();  // Prevent the default context menu from showing
         }
 
-        function stopRecording() {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/record", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.send("action=stop");
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    alert("Recording stopped");
-                } else {
-                    alert("Error stopping recording: " + xhr.responseText);
-                }
-            };
-        }
     </script>
 </head>
 <body>
-    <h1>Robot Control</h1>
+    <h1>Control the Robot</h1>
 
-    <!-- Control Buttons -->
-    <div>
-        <img src="/static/forward.jpg" class="control-image"
+    <!-- Forward Button -->
+    <div style="text-align: center;">
+        <img src="/static/forward.jpg" class="control-image" 
             onmousedown="startMoving('forward')" 
-            onmouseup="stopMoving()" alt="Forward">
-        <img src="/static/backward.jpg" class="control-image"
+            onmouseup="stopMoving()" 
+            ontouchstart="startMoving('forward')" 
+            ontouchend="stopMoving()" 
+            oncontextmenu="disableContextMenu(event)" alt="Forward">
+    </div>
+
+    <!-- Backward Button -->
+    <div style="text-align: center;">
+        <img src="/static/backward.jpg" class="control-image" 
             onmousedown="startMoving('backward')" 
-            onmouseup="stopMoving()" alt="Backward">
+            onmouseup="stopMoving()" 
+            ontouchstart="startMoving('backward')" 
+            ontouchend="stopMoving()" 
+            oncontextmenu="disableContextMenu(event)" alt="Backward">
     </div>
 
-    <!-- Speed Slider -->
+    <!-- Steering Speed Slider -->
     <div>
-        <h2>Speed Control</h2>
-        <input type="range" min="0" max="100" value="50" oninput="updateSpeed(this.value)">
-        <p>Speed: <span id="speed-display">50</span></p>
+        <h2>Steering Wheel Speed Control (Front Wheels)</h2>
+        <input type="range" min="0" max="100" value="50" class="speed-slider" 
+            oninput="updateSteeringSpeed(this.value)">
+        <p>Steering Speed: <span id="steering-speed-display">50</span></p>
     </div>
 
-    <!-- Steering Slider -->
+    <!-- Slider for Steering -->
     <div>
-        <h2>Steering Control (Left/Right)</h2>
-        <input type="range" min="-25" max="25" value="0" oninput="updateSteering(this.value)">
-        <p>Steering Angle: <span id="steering-display">0</span></p>
+        <h2>Steering Control (Direction)</h2>
+        <input type="range" min="-25" max="25" value="0" class="steering-slider" 
+            oninput="controlSteering(this.value)">
     </div>
+<div>
+    <h2>Video Recording</h2>
+    <button onclick="startRecording()">Start Recording</button>
+    <button onclick="stopRecording()">Stop Recording</button>
+</div>
 
-    <!-- Recording Buttons -->
-    <div>
-        <h2>Video Recording</h2>
-        <button onclick="startRecording()">Start Recording</button>
-        <button onclick="stopRecording()">Stop Recording</button>
-    </div>
+<script>
+    function startRecording() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/record", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send("action=start");
+    }
+
+    function stopRecording() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/record", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send("action=stop");
+    }
+</script>
+
 </body>
 </html>
