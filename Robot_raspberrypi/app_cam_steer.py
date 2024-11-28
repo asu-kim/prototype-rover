@@ -19,7 +19,7 @@ PWM_PIN_C = 23  # GPIO23 for speed (PWM)
 
 # Maximum duty cycle for the motors
 MAX_DUTY_CYCLE = 50  # Adjust this for motor A (main movement)
-STEERING_DUTY_CYCLE = 75  # Lower duty cycle for steering to slow it down
+STEERING_DUTY_CYCLE = 100  # Lower duty cycle for steering to slow it down
 
 # Video recording variables
 recording = False
