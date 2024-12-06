@@ -126,19 +126,34 @@
 </div>
 
 <script>
-    function startRecording() {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/record", true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send("action=start");
-    }
+function startRecording() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/record", true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            alert("Recording started!");
+        } else {
+            alert("Error starting recording: " + xhr.responseText);
+        }
+    };
+    xhr.send("action=start");
+}
 
-    function stopRecording() {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/record", true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send("action=stop");
-    }
+function stopRecording() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/record", true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            alert("Recording stopped!");
+        } else {
+            alert("Error stopping recording: " + xhr.responseText);
+        }
+    };
+    xhr.send("action=stop");
+}
+
 </script>
 
 </body>
