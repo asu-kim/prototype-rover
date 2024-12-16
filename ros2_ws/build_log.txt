@@ -1,0 +1,37 @@
+[1.383s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/home/pk/Toy-car/ros2_ws/install/robot_control' in the environment variable AMENT_PREFIX_PATH doesn't exist
+Starting >>> robot_control
+running develop
+/usr/lib/python3/dist-packages/setuptools/command/easy_install.py:158: EasyInstallDeprecationWarning: easy_install command is deprecated. Use build and pip and other standards-based tools.
+  warnings.warn(
+running egg_info
+creating robot_control.egg-info
+writing robot_control.egg-info/PKG-INFO
+writing dependency_links to robot_control.egg-info/dependency_links.txt
+writing entry points to robot_control.egg-info/entry_points.txt
+writing requirements to robot_control.egg-info/requires.txt
+writing top-level names to robot_control.egg-info/top_level.txt
+writing manifest file 'robot_control.egg-info/SOURCES.txt'
+reading manifest file 'robot_control.egg-info/SOURCES.txt'
+writing manifest file 'robot_control.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/pk/Toy-car/ros2_ws/install/robot_control/lib/python3.10/site-packages/robot-control.egg-link (link to .)
+Installing gpio_control script to /home/pk/Toy-car/ros2_ws/install/robot_control/lib/robot_control
+Installing web_server script to /home/pk/Toy-car/ros2_ws/install/robot_control/lib/robot_control
+
+Installed /home/pk/Toy-car/ros2_ws/build/robot_control
+running symlink_data
+creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/ament_index
+creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/ament_index/resource_index
+creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/ament_index/resource_index/packages
+symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/resource/robot_control -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/ament_index/resource_index/packages
+symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/package.xml -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control
+creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/launch
+symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/launch/robot_control_launch.py -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/launch
+--- stderr: robot_control
+/usr/lib/python3/dist-packages/setuptools/command/easy_install.py:158: EasyInstallDeprecationWarning: easy_install command is deprecated. Use build and pip and other standards-based tools.
+  warnings.warn(
+---
+Finished <<< robot_control [4.90s]
+
+Summary: 1 package finished [6.15s]
+  1 package had stderr output: robot_control

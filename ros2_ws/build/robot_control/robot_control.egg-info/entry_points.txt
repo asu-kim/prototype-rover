@@ -1,0 +1,4 @@
+[console_scripts]
+gpio_control = robot_control.gpio_control:main
+web_server = robot_control.web_server:main
+
