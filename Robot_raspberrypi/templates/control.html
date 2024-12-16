@@ -83,7 +83,7 @@
     </script>
 </head>
 <body>
-    <h1>Control the Robot</h1>
+    <h2>Control the Robot</h2>
 
     <!-- Forward Button -->
     <div style="text-align: center;">
@@ -107,7 +107,7 @@
 
     <!-- Steering Speed Slider -->
     <div>
-        <h2>Steering Wheel Speed Control (Front Wheels)</h2>
+        <h3>Steering Wheel Speed Control (Front Wheels)</h3>
         <input type="range" min="0" max="100" value="50" class="speed-slider" 
             oninput="updateSteeringSpeed(this.value)">
         <p>Steering Speed: <span id="steering-speed-display">50</span></p>
@@ -115,30 +115,45 @@
 
     <!-- Slider for Steering -->
     <div>
-        <h2>Steering Control (Direction)</h2>
+        <h3>Steering Control (Direction)</h3>
         <input type="range" min="-25" max="25" value="0" class="steering-slider" 
             oninput="controlSteering(this.value)">
     </div>
 <div>
-    <h2>Video Recording</h2>
+    <h3>Video Recording</h3>
     <button onclick="startRecording()">Start Recording</button>
     <button onclick="stopRecording()">Stop Recording</button>
 </div>
 
 <script>
-    function startRecording() {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/record", true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send("action=start");
-    }
+function startRecording() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/record", true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            alert("Recording started!");
+        } else {
+            alert("Error starting recording: " + xhr.responseText);
+        }
+    };
+    xhr.send("action=start");
+}
 
-    function stopRecording() {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/record", true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send("action=stop");
-    }
+function stopRecording() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/record", true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            alert("Recording stopped!");
+        } else {
+            alert("Error stopping recording: " + xhr.responseText);
+        }
+    };
+    xhr.send("action=stop");
+}
+
 </script>
 
 </body>

@@ -35,7 +35,7 @@ GPIO.setup(PWM_PIN_C, GPIO.OUT)
 
 # Initialize PWM for both motor drivers
 pwm_a = GPIO.PWM(PWM_PIN_A, 5000)  # PWM for Motor A at 5kHz
-pwm_c = GPIO.PWM(PWM_PIN_C, 5000)  # PWM for Motor C at 5kHz
+pwm_c = GPIO.PWM(PWM_PIN_C, 40000)  # PWM for Motor C at 5kHz
 pwm_a.start(0)  # Start with 0% duty cycle
 pwm_c.start(0)  # Start with 0% duty cycle
 
