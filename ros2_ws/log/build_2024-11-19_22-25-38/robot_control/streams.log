@@ -1,0 +1,34 @@
+[2.717s] Invoking command in '/home/pk/Toy-car/ros2_ws/build/robot_control': PYTHONPATH=/home/pk/Toy-car/ros2_ws/build/robot_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/pk/Toy-car/ros2_ws/install/robot_control/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py develop --editable --build-directory /home/pk/Toy-car/ros2_ws/build/robot_control/build --no-deps symlink_data
+[3.810s] running develop
+[3.814s] /usr/lib/python3/dist-packages/setuptools/command/easy_install.py:158: EasyInstallDeprecationWarning: easy_install command is deprecated. Use build and pip and other standards-based tools.
+[3.815s]   warnings.warn(
+[4.518s] running egg_info
+[4.518s] creating robot_control.egg-info
+[4.519s] writing robot_control.egg-info/PKG-INFO
+[4.520s] writing dependency_links to robot_control.egg-info/dependency_links.txt
+[4.520s] writing entry points to robot_control.egg-info/entry_points.txt
+[4.521s] writing requirements to robot_control.egg-info/requires.txt
+[4.521s] writing top-level names to robot_control.egg-info/top_level.txt
+[4.522s] writing manifest file 'robot_control.egg-info/SOURCES.txt'
+[4.532s] reading manifest file 'robot_control.egg-info/SOURCES.txt'
+[4.534s] writing manifest file 'robot_control.egg-info/SOURCES.txt'
+[4.540s] running build_ext
+[4.541s] Creating /home/pk/Toy-car/ros2_ws/install/robot_control/lib/python3.10/site-packages/robot-control.egg-link (link to .)
+[4.544s] Installing gpio_control script to /home/pk/Toy-car/ros2_ws/install/robot_control/lib/robot_control
+[4.545s] Installing web_server script to /home/pk/Toy-car/ros2_ws/install/robot_control/lib/robot_control
+[4.546s] 
+[4.547s] Installed /home/pk/Toy-car/ros2_ws/build/robot_control
+[4.547s] running symlink_data
+[4.548s] creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/ament_index
+[4.548s] creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/ament_index/resource_index
+[4.549s] creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/ament_index/resource_index/packages
+[4.549s] symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/resource/robot_control -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/ament_index/resource_index/packages
+[4.549s] symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/package.xml -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control
+[4.550s] creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/launch
+[4.551s] symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/launch/robot_control_launch.py -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/launch
+[4.551s] creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/templates
+[4.551s] symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/templates/control.html -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/templates
+[4.552s] creating /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/static
+[4.553s] symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/static/forward.jpg -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/static
+[4.554s] symbolically linking /home/pk/Toy-car/ros2_ws/build/robot_control/static/backward.jpg -> /home/pk/Toy-car/ros2_ws/install/robot_control/share/robot_control/static
+[4.684s] Invoked command in '/home/pk/Toy-car/ros2_ws/build/robot_control' returned '0': PYTHONPATH=/home/pk/Toy-car/ros2_ws/build/robot_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/pk/Toy-car/ros2_ws/install/robot_control/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py develop --editable --build-directory /home/pk/Toy-car/ros2_ws/build/robot_control/build --no-deps symlink_data

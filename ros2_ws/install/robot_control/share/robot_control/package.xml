@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>robot_control</name>
+  <version>0.0.1</version>
+  <description>ROS 2 package for motor control using Flask and GPIO</description>
+
+  <maintainer email="saipavan4@gmail.com">pk</maintainer>
+  <license>Apache License 2.0</license>
+
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <exec_depend>flask</exec_depend>
+  <exec_depend>RPi.GPIO</exec_depend>
+
+<export>
+    <build_type>ament_python</build_type>
+</export>
+</package>
