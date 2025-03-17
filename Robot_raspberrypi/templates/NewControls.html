@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+        h2 {
+            margin-top: 20px;
+            color: #333;
+        }
+        .control-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .control-row {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .control-image {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .action-buttons {
+            margin-top: 20px;
+        }
+        .action-buttons button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        .action-buttons button:hover {
+            background-color: #45a049;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .steering-slider {
+            width: 300px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>Robot Control Panel</h2>
+
+    <div id="message">Ready to control the robot.</div>
+
+    <div class="control-container">
+        <!-- Forward Button -->
+        <div class="control-row">
+            <img src="/static/forward.jpg" class="control-image" 
+                 onclick="move('forward')" alt="Forward">
+        </div>
+
+        <!-- Backward Button -->
+        <div class="control-row">
+            <img src="/static/backward.jpg" class="control-image" 
+                 onclick="move('backward')" alt="Backward">
+        </div>
+    </div>
+
+    <!-- Steering Control Slider -->
+    <div>
+        <h3>Steering Control (Direction)</h3>
+        <input type="range" min="-25" max="25" value="0" class="steering-slider" 
+            oninput="controlSteering(this.value)">
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button onclick="startRecording()">Start Recording</button>
+        <button onclick="stopRecording()">Stop Recording</button>
+        <button onclick="ignoreCommands()">Ignore Commands (5s)</button>
+        <button onclick="emergencyStop()">Emergency Stop</button>
+    </div>
+
+    <script>
+        // Function to send movement commands
+        function move(direction) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/move", true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    updateMessage(`Robot is moving ${direction}.`);
+                } else {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        updateMessage(response.message || "An error occurred.");
+                    } catch (e) {
+                        updateMessage("An error occurred while processing the request.");
+                    }
+                }
+            };
+            xhr.send("direction=" + direction);
+        }
+
+        // Function to stop the robot
+        function emergencyStop() {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/emergency_stop", true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function () {
+                updateMessage("Emergency Stop activated!");
+            };
+            xhr.send();
+        }
+
+        // Function to ignore commands
+        function ignoreCommands() {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/ignore_commands", true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function () {
+                updateMessage("Ignoring commands for 5 seconds.");
+            };
+            xhr.send();
+        }
+
+        // Function to control steering
+        function controlSteering(value) {
+            let direction = 'stop';
+            if (value > 0) {
+                direction = 'right';
+            } else if (value < 0) {
+                direction = 'left';
+            }
+            move(direction);
+        }
+
+        // Functions for video recording
+        function startRecording() {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/record", true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    updateMessage("Recording started.");
+                } else {
+                    updateMessage("Error: " + xhr.responseText);
+                }
+            };
+            xhr.send("action=start");
+        }
+
+        function stopRecording() {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/record", true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    updateMessage("Recording stopped.");
+                } else {
+                    updateMessage("Error: " + xhr.responseText);
+                }
+            };
+            xhr.send("action=stop");
+        }
+
+        // Function to update the message display
+        function updateMessage(message) {
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = message;
+        }
+    </script>
+</body>
+</html>

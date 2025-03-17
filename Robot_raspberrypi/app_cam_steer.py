@@ -129,6 +129,14 @@ def record():
     else:
         return "Invalid action", 400
 
+@app.route('/stop', methods=['POST'])
+def stop():
+    # Emergency stop for all motors
+    set_motor_a_speed(0)
+    set_motor_c_direction(0)
+    print("Emergency Stop activated")
+    return "Emergency Stop activated!", 200
+
 if __name__ == '__main__':
     try:
         app.run(host='0.0.0.0', port=5000)
