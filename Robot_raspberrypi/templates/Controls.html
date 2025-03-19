@@ -94,6 +94,7 @@
         <button onclick="ignoreCommands()">Ignore Commands (5s)</button>
         <button onclick="softStop()">Soft Stop</button>
         <button onclick="emergencyStop()" style="background-color: red; color: white;">Emergency Stop</button>
+	<button onclick="releaseEmergency()" style="background-color: orange; color: white;">Release Emergency</button>
     </div>
 
     <script>
@@ -208,6 +209,22 @@
             const messageElement = document.getElementById('message');
             messageElement.textContent = message;
         }
+    // Function to release emergency stop
+    function releaseEmergency() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/release_emergency", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                updateMessage("Emergency stop released. You can now control the rover.");
+            } else {
+                updateMessage("Error: Unable to release emergency stop.");
+            }
+        };
+
+        xhr.send();
+    }
     </script>
 </body>
 </html>
