@@ -1,6 +1,6 @@
 import cv2
 
-camera = cv2.VideoCapture('/dev/video0')  # Replace with your correct device
+camera = cv2.VideoCapture('/dev/video0',cv2.CAP_V4L)  # Replace with your correct device
 if camera.isOpened():
     ret, frame = camera.read()
     if ret:

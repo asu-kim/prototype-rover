@@ -15,8 +15,8 @@ DIR_PIN_A = 17
 PWM_PIN_A = 18
 DIR_PIN_C = 22
 PWM_PIN_C = 23
-TRIG = 24
-ECHO = 25
+#TRIG = 24
+#ECHO = 25
 
 # Disable GPIO warnings
 GPIO.setwarnings(False)
@@ -39,8 +39,8 @@ GPIO.setup(DIR_PIN_A, GPIO.OUT)
 GPIO.setup(PWM_PIN_A, GPIO.OUT)
 GPIO.setup(DIR_PIN_C, GPIO.OUT)
 GPIO.setup(PWM_PIN_C, GPIO.OUT)
-GPIO.setup(TRIG, GPIO.OUT)
-GPIO.setup(ECHO, GPIO.IN)
+#GPIO.setup(TRIG, GPIO.OUT)
+#GPIO.setup(ECHO, GPIO.IN)
 
 # Initialize PWM
 pwm_a = GPIO.PWM(PWM_PIN_A, 5000)
@@ -87,7 +87,7 @@ def set_motor_c_direction(speed):
 
     threading.Thread(target=run_motor, daemon=True).start()
 
-def measure_distance():
+'''def measure_distance():
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
     GPIO.output(TRIG, False)
@@ -103,7 +103,7 @@ def measure_distance():
 
     time_elapsed = stop_time - start_time
     distance = (time_elapsed * 34300) / 2
-    return distance
+    return distance '''
 
 # Video recording function
 def record_video():
@@ -145,13 +145,12 @@ def move():
         return jsonify(message="Emergency stop is active!"), 400
 
     direction = request.form.get('direction')
-    print("MOVE API CALLED with direction:", direction)
     if not direction:
         return jsonify(message="Missing direction parameter."), 400
 
-    distance = measure_distance()
-    if direction == "forward" and 0 <= distance < 50:
-        return jsonify(message="Obstacle detected! Cannot move forward."), 400
+    #distance = measure_distance()
+    #if direction == "forward" :
+    #    return jsonify(message="Obstacle detected! Cannot move forward."), 400
 
     movement_map = {
         "forward": lambda: set_motor_a_speed(20),

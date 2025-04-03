@@ -94,7 +94,7 @@ def record_video():
 # Flask routes to render the webpage and handle motor control
 @app.route('/')
 def index():
-    return render_template('control.html')
+    return render_template('Controls.html')
 
 @app.route('/move', methods=['POST'])
 def move():

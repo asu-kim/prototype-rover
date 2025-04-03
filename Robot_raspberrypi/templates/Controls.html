@@ -66,25 +66,19 @@
 
     <div id="message">Ready to control the rover.</div>
 
-    <div class="control-container">
         <!-- Forward Button -->
-        <div class="control-row">
-            <img src="/static/forward.jpg" class="control-image" 
-                 onclick="move('forward')" alt="Forward">
-        </div>
+	<div class="control-row">
+    	    <img src="/static/forward.jpg" class="control-image" onclick="move('forward')" alt="Forward">
+	</div>
 
         <!-- Backward Button -->
         <div class="control-row">
-            <img src="/static/backward.jpg" class="control-image" 
-                 onclick="move('backward')" alt="Backward">
-        </div>
-    </div>
+    	    <img src="/static/backward.jpg" class="control-image" onclick="move('backward')" alt="Backward"></div>
 
     <!-- Steering Control Slider -->
     <div>
         <h3>Steering Control (Direction)</h3>
-        <input type="range" min="-25" max="25" value="0" class="steering-slider" 
-            oninput="controlSteering(this.value)">
+        <input type="range" min="-25" max="25" value="0" class="steering-slider" oninput="controlSteering(this.value)">
     </div>
 
     <!-- Action Buttons -->
@@ -97,124 +91,96 @@
 	<button onclick="releaseEmergency()" style="background-color: orange; color: white;">Release Emergency</button>
     </div>
 
-    <script>
-        let ignoreCommandsActive = false;
+<script>
+    let ignoreCommandsActive = false;
+    let currentMoveDirection = null;  // Track if rover is moving forward/backward
 
-        // Function to send movement commands
-        function move(direction) {
-            if (ignoreCommandsActive) {
-                updateMessage("Ignoring commands. Please wait...");
-                return;
-            }
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/move", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    updateMessage(`Rover is moving ${direction}.`);
-                } else {
-                    try {
-                        const response = JSON.parse(xhr.responseText);
-                        updateMessage(response.message || "An error occurred.");
-                    } catch (e) {
-                        updateMessage("An error occurred while processing the request.");
-                    }
+    // Send basic movement command
+    function move(direction) {
+        if (ignoreCommandsActive) {
+            updateMessage("Ignoring commands. Please wait...");
+            return;
+        }
+
+        if (direction === 'forward' || direction === 'backward') {
+            currentMoveDirection = direction;  // Save current movement
+        } else if (direction === 'stop') {
+            currentMoveDirection = null;  // Reset if stopping
+        }
+
+        sendDirection(direction);
+    }
+
+    // Core function to send direction to backend
+    function sendDirection(direction) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/move", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                updateMessage(`Rover is moving ${direction}.`);
+            } else {
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    updateMessage(response.message || "An error occurred.");
+                } catch (e) {
+                    updateMessage("An error occurred while processing the request.");
                 }
-            };
-            xhr.send("direction=" + direction);
-        }
-
-        // Function to soft stop the Rover
-        function softStop() {
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/soft_stop", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onload = function () {
-                updateMessage("Soft Stop activated! Rover stopped but further commands allowed.");
-            };
-            xhr.send();
-        }
-
-        // Function to stop the Rover
-        function emergencyStop() {
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/emergency_stop", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onload = function () {
-                updateMessage("Emergency Stop activated!");
-            };
-            xhr.send();
-        }
-
-        // Function to ignore commands for 5 seconds
-        function ignoreCommands() {
-            if (ignoreCommandsActive) {
-                updateMessage("Already ignoring commands.");
-                return;
             }
-            ignoreCommandsActive = true;
-            updateMessage("Ignoring commands for 5 seconds.");
-            setTimeout(() => {
-                ignoreCommandsActive = false;
-                updateMessage("Ready to receive commands.");
-            }, 5000);
+        };
+        xhr.send("direction=" + direction);
+    }
+
+    // Adjust steering while maintaining movement
+    function controlSteering(value) {
+        if (ignoreCommandsActive) {
+            updateMessage("Ignoring commands. Please wait...");
+            return;
         }
 
-        // Function to control steering
-        function controlSteering(value) {
-            if (ignoreCommandsActive) {
-                updateMessage("Ignoring commands. Please wait...");
-                return;
-            }
-            let direction = 'stop';
-            if (value > 0) {
-                direction = 'right';
-            } else if (value < 0) {
-                direction = 'left';
-            }
-            move(direction);
+        let steeringCommand = null;
+
+        if (value > 5) {
+            steeringCommand = 'right';
+        } else if (value < -5) {
+            steeringCommand = 'left';
+        } else {
+            // When slider is centered, resume current forward/backward
+            steeringCommand = currentMoveDirection || 'stop';
         }
 
-        // Functions for video recording
-        function startRecording() {
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/record", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    updateMessage("Recording started.");
-                } else {
-                    updateMessage("Error: " + xhr.responseText);
-                }
-            };
-            xhr.send("action=start");
-        }
+        sendDirection(steeringCommand);
+    }
 
-        function stopRecording() {
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/record", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    updateMessage("Recording stopped.");
-                } else {
-                    updateMessage("Error: " + xhr.responseText);
-                }
-            };
-            xhr.send("action=stop");
-        }
+    // Soft Stop
+    function softStop() {
+        currentMoveDirection = null;
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/soft_stop", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            updateMessage("Soft Stop activated! Rover stopped but further commands allowed.");
+        };
+        xhr.send();
+    }
 
-        // Function to update the message display
-        function updateMessage(message) {
-            const messageElement = document.getElementById('message');
-            messageElement.textContent = message;
-        }
-    // Function to release emergency stop
+    // Emergency Stop
+    function emergencyStop() {
+        currentMoveDirection = null;
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/emergency_stop", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            updateMessage("Emergency Stop activated!");
+        };
+        xhr.send();
+    }
+
+    // Release Emergency
     function releaseEmergency() {
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "/release_emergency", true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
         xhr.onload = function () {
             if (xhr.status === 200) {
                 updateMessage("Emergency stop released. You can now control the rover.");
@@ -222,9 +188,56 @@
                 updateMessage("Error: Unable to release emergency stop.");
             }
         };
-
         xhr.send();
     }
-    </script>
+
+    // Ignore commands for 5 seconds
+    function ignoreCommands() {
+        if (ignoreCommandsActive) {
+            updateMessage("Already ignoring commands.");
+            return;
+        }
+        ignoreCommandsActive = true;
+        updateMessage("Ignoring commands for 5 seconds.");
+        setTimeout(() => {
+            ignoreCommandsActive = false;
+            updateMessage("Ready to receive commands.");
+        }, 5000);
+    }
+
+    // Video Controls
+    function startRecording() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/record", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                updateMessage("Recording started.");
+            } else {
+                updateMessage("Error: " + xhr.responseText);
+            }
+        };
+        xhr.send("action=start");
+    }
+
+    function stopRecording() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/record", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                updateMessage("Recording stopped.");
+            } else {
+                updateMessage("Error: " + xhr.responseText);
+            }
+        };
+        xhr.send("action=stop");
+    }
+
+    function updateMessage(message) {
+        const messageElement = document.getElementById('message');
+        messageElement.textContent = message;
+    }
+</script>
 </body>
 </html>

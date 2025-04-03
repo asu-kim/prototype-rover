@@ -15,8 +15,8 @@ DIR_PIN_A = 17
 PWM_PIN_A = 18
 DIR_PIN_C = 22
 PWM_PIN_C = 23
-TRIG = 24
-ECHO = 25
+#TRIG = 24
+#ECHO = 25
 
 # Disable GPIO warnings
 GPIO.setwarnings(False)
@@ -29,6 +29,8 @@ STEERING_DUTY_CYCLE = 100
 recording = False
 camera = None
 video_writer = None
+record_lock = threading.Lock()
+last_record_stop_time = 0
 
 # Global emergency stop flag
 emergency_stop_active = False
@@ -39,8 +41,8 @@ GPIO.setup(DIR_PIN_A, GPIO.OUT)
 GPIO.setup(PWM_PIN_A, GPIO.OUT)
 GPIO.setup(DIR_PIN_C, GPIO.OUT)
 GPIO.setup(PWM_PIN_C, GPIO.OUT)
-GPIO.setup(TRIG, GPIO.OUT)
-GPIO.setup(ECHO, GPIO.IN)
+#GPIO.setup(TRIG, GPIO.OUT)
+#GPIO.setup(ECHO, GPIO.IN)
 
 # Initialize PWM
 pwm_a = GPIO.PWM(PWM_PIN_A, 5000)
@@ -87,7 +89,7 @@ def set_motor_c_direction(speed):
 
     threading.Thread(target=run_motor, daemon=True).start()
 
-def measure_distance():
+'''def measure_distance():
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
     GPIO.output(TRIG, False)
@@ -103,34 +105,53 @@ def measure_distance():
 
     time_elapsed = stop_time - start_time
     distance = (time_elapsed * 34300) / 2
-    return distance
+    return distance '''
 
 # Video recording function
 def record_video():
     global recording, camera, video_writer
-    camera = cv2.VideoCapture('/dev/video0')  # Use the correct device path
-    if not camera.isOpened():
-        print("Failed to open camera")
-        return
 
-    now = datetime.now().strftime("%Y%m%d_%H%M%S")
-    os.makedirs("recordings", exist_ok=True)
-    output_file = f"recordings/recording_{now}.avi"
+    with record_lock:
+        print("Trying to open camera...")
 
-    # Set up video writer
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    video_writer = cv2.VideoWriter(output_file, fourcc, 20.0, (640, 480))
+        try:
+            camera = cv2.VideoCapture('/dev/video0') 
+            if not camera.isOpened():
+                print("Failed to open camera")
+                recording = False
+                return
 
-    while recording:
-        ret, frame = camera.read()
-        if ret:
-            video_writer.write(frame)
-        else:
-            print("Failed to capture frame")
-            break
+            now = datetime.now().strftime("%Y%m%d_%H%M%S")
+            os.makedirs("recordings", exist_ok=True)
+            output_file = f"recordings/recording_{now}.avi"
 
-    camera.release()
-    video_writer.release()
+            fourcc = cv2.VideoWriter_fourcc(*'XVID')
+            video_writer = cv2.VideoWriter(output_file, fourcc, 20.0, (640, 480))
+
+            print(f"Recording to {output_file}")
+
+            while recording:
+                ret, frame = camera.read()
+                if not ret:
+                    print("Failed to capture frame")
+                    recording = False
+                    break
+                video_writer.write(frame)
+
+        except Exception as e:
+            print(f"Exception during recording: {e}")
+            recording = False
+
+        finally:
+            if camera:
+                camera.release()
+                camera = None 
+            if video_writer:
+                video_writer.release()
+                video_writer = None
+
+            print("Camera and writer released.")
+            time.sleep(1)  # Ensure OS finishes releasing resources
 
 # Flask API Routes
 # Flask routes
@@ -145,13 +166,12 @@ def move():
         return jsonify(message="Emergency stop is active!"), 400
 
     direction = request.form.get('direction')
-    print("MOVE API CALLED with direction:", direction)
     if not direction:
         return jsonify(message="Missing direction parameter."), 400
 
-    distance = measure_distance()
-    if direction == "forward" and 0 <= distance < 50:
-        return jsonify(message="Obstacle detected! Cannot move forward."), 400
+    #distance = measure_distance()
+    #if direction == "forward" :
+    #    return jsonify(message="Obstacle detected! Cannot move forward."), 400
 
     movement_map = {
         "forward": lambda: set_motor_a_speed(20),

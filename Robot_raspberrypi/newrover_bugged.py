@@ -15,8 +15,8 @@ DIR_PIN_A = 17
 PWM_PIN_A = 18
 DIR_PIN_C = 22
 PWM_PIN_C = 23
-TRIG = 24
-ECHO = 25
+#TRIG = 24
+#ECHO = 25
 
 # Disable GPIO warnings
 GPIO.setwarnings(False)
@@ -39,8 +39,8 @@ GPIO.setup(DIR_PIN_A, GPIO.OUT)
 GPIO.setup(PWM_PIN_A, GPIO.OUT)
 GPIO.setup(DIR_PIN_C, GPIO.OUT)
 GPIO.setup(PWM_PIN_C, GPIO.OUT)
-GPIO.setup(TRIG, GPIO.OUT)
-GPIO.setup(ECHO, GPIO.IN)
+#GPIO.setup(TRIG, GPIO.OUT)
+#GPIO.setup(ECHO, GPIO.IN)
 
 # Initialize PWM
 pwm_a = GPIO.PWM(PWM_PIN_A, 5000)
@@ -87,7 +87,7 @@ def set_motor_c_direction(speed):
 
     threading.Thread(target=run_motor, daemon=True).start()
 
-def measure_distance():
+'''def measure_distance():
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
     GPIO.output(TRIG, False)
@@ -103,18 +103,19 @@ def measure_distance():
 
     time_elapsed = stop_time - start_time
     distance = (time_elapsed * 34300) / 2
-    return distance
+    return distance '''
 
 # Video recording function
 def record_video():
     global recording, camera, video_writer
+    print("Trying to open camera...")
     camera = cv2.VideoCapture('/dev/video0')  # Use the correct device path
     if not camera.isOpened():
         print("Failed to open camera")
         return
 
     now = datetime.now().strftime("%Y%m%d_%H%M%S")
-    os.makedirs("recordings", exist_ok=True)
+    #os.makedirs("recordings", exist_ok=True)
     output_file = f"recordings/recording_{now}.avi"
 
     # Set up video writer
@@ -131,6 +132,9 @@ def record_video():
 
     camera.release()
     video_writer.release()
+    print("Camera released")
+    time.sleep(1)  # give time for OS to fully release the device
+
 
 # Flask API Routes
 # Flask routes
@@ -145,13 +149,12 @@ def move():
         return jsonify(message="Emergency stop is active!"), 400
 
     direction = request.form.get('direction')
-    print("MOVE API CALLED with direction:", direction)
     if not direction:
         return jsonify(message="Missing direction parameter."), 400
 
-    distance = measure_distance()
-    if direction == "forward" and 0 <= distance < 50:
-        return jsonify(message="Obstacle detected! Cannot move forward."), 400
+    #distance = measure_distance()
+    #if direction == "forward":
+    #    return jsonify(message="Error"), 400
 
     movement_map = {
         "forward": lambda: set_motor_a_speed(20),
