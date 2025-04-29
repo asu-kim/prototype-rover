@@ -9,7 +9,7 @@ You need Python installed, as the main scripts are written in Python.
 The following dependencies are required to run this project.
   
 ```
-pip install flask RPi.GPIO opencv-python opencv-python-headless
+pip install flask RPi.GPIO opencv-python-headless
 
 ```
 ### To run the code
