@@ -34,6 +34,7 @@ last_record_stop_time = 0
 
 # Global emergency stop flag
 emergency_stop_active = False
+latest_distance = 1000
 
 # GPIO setup
 GPIO.setmode(GPIO.BCM)
@@ -89,6 +90,7 @@ def set_motor_c_direction(speed):
 
     threading.Thread(target=run_motor, daemon=True).start()
 
+# Function to measure distance
 def measure_distance():
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
@@ -106,6 +108,31 @@ def measure_distance():
     time_elapsed = stop_time - start_time
     distance = (time_elapsed * 34300) / 2
     return distance
+
+# Function to update distance in a thread
+def ultrasonic_distance_updater():
+    global latest_distance
+    while True:
+        try:
+            distance = measure_distance()
+            latest_distance = distance
+            time.sleep(0.1)  # Update every 100 ms
+        except Exception as e:
+            print(f"Ultrasonic sensor error: {e}")
+            latest_distance = 1000  # Safe default
+            time.sleep(0.5)
+
+def obstacle_monitor():
+    global latest_distance, emergency_stop_active
+    while True:
+        if not emergency_stop_active:
+            if 0 <= latest_distance < 50:
+                print(f"Obstacle detected during motion: {latest_distance:.1f} cm! Stopping motors.")
+                set_motor_a_speed(0)
+                set_motor_c_direction(0)
+                # Optional: you can even activate emergency stop here
+                # emergency_stop_active = True
+        time.sleep(0.1)  # Check every 100 ms
 
 # Video recording function
 def record_video():
@@ -161,7 +188,7 @@ def index():
 
 @app.route('/move', methods=['POST'])
 def move():
-    global emergency_stop_active
+    global emergency_stop_active, latest_distance
     if emergency_stop_active:
         return jsonify(message="Emergency stop is active!"), 400
 
@@ -170,9 +197,8 @@ def move():
     if not direction:
         return jsonify(message="Missing direction parameter."), 400
 
-    distance = measure_distance()
-    if direction == "forward" and 0 <= distance < 50:
-        return jsonify(message="Obstacle detected! Cannot move forward."), 400
+    if direction == "forward" and 0 <= latest_distance < 100:
+        return jsonify(message=f"Obstacle detected {latest_distance:.1f}cm! Cannot move forward."), 400
 
     movement_map = {
         "forward": lambda: set_motor_a_speed(20),
@@ -236,6 +262,14 @@ def record():
 
 if __name__ == '__main__':
     try:
+        # Start ultrasonic sensor updater thread
+        ultrasonic_thread = threading.Thread(target=ultrasonic_distance_updater, daemon=True)
+        ultrasonic_thread.start()
+
+        # Start obstacle monitor thread
+        obstacle_thread = threading.Thread(target=obstacle_monitor, daemon=True)
+        obstacle_thread.start()
+
         app.run(host='0.0.0.0', port=5000, debug=True, threaded=True)
     except KeyboardInterrupt:
         pass
