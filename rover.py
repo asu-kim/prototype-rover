@@ -184,7 +184,7 @@ def record_video():
 # Flask routes
 @app.route('/')
 def index():
-    return render_template('/Robot_raspberrypi/templates/Controls.html')
+    return render_template('Controls.html')
 
 @app.route('/move', methods=['POST'])
 def move():
