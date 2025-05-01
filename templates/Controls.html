@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rover Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+        h2 {
+            margin-top: 20px;
+            color: #333;
+        }
+        .control-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .control-row {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .control-image {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .action-buttons {
+            margin-top: 20px;
+        }
+        .action-buttons button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        .action-buttons button:hover {
+            background-color: #45a049;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .steering-slider {
+            width: 300px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>Rover Control Panel</h2>
+
+    <div id="message">Ready to control the rover.</div>
+
+        <!-- Forward Button -->
+	<div class="control-row">
+    	    <img src="/static/forward.jpg" class="control-image" onclick="move('forward')" alt="Forward">
+	</div>
+
+        <!-- Backward Button -->
+        <div class="control-row">
+    	    <img src="/static/backward.jpg" class="control-image" onclick="move('backward')" alt="Backward"></div>
+
+    <!-- Steering Control Slider -->
+    <div>
+        <h3>Steering Control (Direction)</h3>
+        <input type="range" min="-25" max="25" value="0" class="steering-slider" oninput="controlSteering(this.value)">
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button onclick="startRecording()" style="background-color: blue; color: white;">Start Recording</button>
+        <button onclick="stopRecording()" style="background-color: blue; color: white;">Stop Recording</button>
+        <button onclick="ignoreCommands()">Ignore Commands (5s)</button>
+        <button onclick="softStop()">Soft Stop</button>
+        <button onclick="emergencyStop()" style="background-color: red; color: white;">Emergency Stop</button>
+	<button onclick="releaseEmergency()" style="background-color: orange; color: white;">Release Emergency</button>
+    </div>
+
+<script>
+    let ignoreCommandsActive = false;
+    let currentMoveDirection = null;  // Track if rover is moving forward/backward
+
+    // Send basic movement command
+    function move(direction) {
+        if (ignoreCommandsActive) {
+            updateMessage("Ignoring commands. Please wait...");
+            return;
+        }
+
+        if (direction === 'forward' || direction === 'backward') {
+            currentMoveDirection = direction;  // Save current movement
+        } else if (direction === 'stop') {
+            currentMoveDirection = null;  // Reset if stopping
+        }
+
+        sendDirection(direction);
+    }
+
+    // Core function to send direction to backend
+    function sendDirection(direction) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/move", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                updateMessage(`Rover is moving ${direction}.`);
+            } else {
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    updateMessage(response.message || "An error occurred.");
+                } catch (e) {
+                    updateMessage("An error occurred while processing the request.");
+                }
+            }
+        };
+        xhr.send("direction=" + direction);
+    }
+
+    // Adjust steering while maintaining movement
+    function controlSteering(value) {
+        if (ignoreCommandsActive) {
+            updateMessage("Ignoring commands. Please wait...");
+            return;
+        }
+
+        let steeringCommand = null;
+
+        if (value > 5) {
+            steeringCommand = 'right';
+        } else if (value < -5) {
+            steeringCommand = 'left';
+        } else {
+            // When slider is centered, resume current forward/backward
+            steeringCommand = currentMoveDirection || 'stop';
+        }
+
+        sendDirection(steeringCommand);
+    }
+
+    // Soft Stop
+    function softStop() {
+        currentMoveDirection = null;
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/soft_stop", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            updateMessage("Soft Stop activated! Rover stopped but further commands allowed.");
+        };
+        xhr.send();
+    }
+
+    // Emergency Stop
+    function emergencyStop() {
+        currentMoveDirection = null;
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/emergency_stop", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            updateMessage("Emergency Stop activated!");
+        };
+        xhr.send();
+    }
+
+    // Release Emergency
+    function releaseEmergency() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/release_emergency", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                updateMessage("Emergency stop released. You can now control the rover.");
+            } else {
+                updateMessage("Error: Unable to release emergency stop.");
+            }
+        };
+        xhr.send();
+    }
+
+    // Ignore commands for 5 seconds
+    function ignoreCommands() {
+        if (ignoreCommandsActive) {
+            updateMessage("Already ignoring commands.");
+            return;
+        }
+        ignoreCommandsActive = true;
+        updateMessage("Ignoring commands for 5 seconds.");
+        setTimeout(() => {
+            ignoreCommandsActive = false;
+            updateMessage("Ready to receive commands.");
+        }, 5000);
+    }
+
+    // Video Controls
+    function startRecording() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/record", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                updateMessage("Recording started.");
+            } else {
+                updateMessage("Error: " + xhr.responseText);
+            }
+        };
+        xhr.send("action=start");
+    }
+
+    function stopRecording() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/record", true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                updateMessage("Recording stopped.");
+            } else {
+                updateMessage("Error: " + xhr.responseText);
+            }
+        };
+        xhr.send("action=stop");
+    }
+
+    function updateMessage(message) {
+        const messageElement = document.getElementById('message');
+        messageElement.textContent = message;
+    }
+</script>
+</body>
+</html>
