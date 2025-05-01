@@ -14,9 +14,6 @@ pip install flask RPi.GPIO opencv-python-headless
 ```
 ## To run the code
 
-In the terminal, go to the `Robot_raspberrypi` directory:
-
-
 ### Step 1 (if you are attaching a USB camera to the Raspberry Pi to record data, else skip to Step 2)
 
 ``` 
@@ -40,12 +37,13 @@ sudo python3 cam_test.py
 ### Step 2
 
 ``` 
-sudo python3 newrover_3.py
+sudo python3 rover.py
 ```
 
 - Update the camera port inside the code if necessary based on Step 1 results.
 - Run this program to control the rover through the web interface.
-- Do not change any of the files in Robot_raspberrypi/static and Robot_raspberrypi/templates
+- Do not change any of the files in static and templates folders.
+- Files in Robot_raspberrypi can be ignored. they are the previous codes used for building the prototype rover
 
 # Contributors
 - Pawan Kumar (pkumar97@asu.edu), Ph.D. student at Arizona State University
