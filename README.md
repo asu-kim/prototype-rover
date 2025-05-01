@@ -19,22 +19,29 @@ In the terminal, go to the `Robot_raspberrypi` directory:
 
 ### Step 1 (if you are attaching a USB camera to the Raspberry Pi to record data, else skip to Step 2)
 
-``` lsusb ```
-
+``` 
+lsusb
+ ```
 - Check if the USB camera is detected (lists connected USB devices).
 
-``` ls /dev/video* ```
+``` 
+ls /dev/video*
+```
 
 - Find the video device port (e.g., /dev/video0, /dev/video1).
 
-``` sudo python3 cam_test.py ```
+``` 
+sudo python3 cam_test.py
+```
 
 - Test and verify the correct camera port. 
 - Ensure the script runs properly and confirms the camera is working.
 
 ### Step 2
 
-``` sudo python3 newrover_3.py ```
+``` 
+sudo python3 newrover_3.py
+```
 
 - Update the camera port inside the code if necessary based on Step 1 results.
 - Run this program to control the rover through the web interface.
