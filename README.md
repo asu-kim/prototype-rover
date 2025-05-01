@@ -41,7 +41,7 @@ sudo python3 rover.py
 ```
 
 - Update the camera port inside the code if necessary based on Step 1 results.
-- You need to make the circuit connections as shown in Circuit_toy_car.pdf and refer rover.py for the GPIO pins. If any changes made should be made in the code.
+- You need to make the circuit connections as shown in ``` Circuit_toy_car.pdf ``` and refer ``` rover.py ``` for the GPIO pins. If any changes made should be made in the code.
 - Run this program to control the rover through the web interface.
 - Do not change any of the files in static and templates folders.
 - Files in Robot_raspberrypi can be ignored. they are the previous codes used for building the prototype rover
