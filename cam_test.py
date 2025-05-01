@@ -1,19 +1,11 @@
-import pyrealsense2 as rs
+import cv2
 
-pipeline = rs.pipeline()
-config = rs.config()
-
-config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
-
-try:
-    pipeline.start(config)
-    print("Camera is streaming. Press Ctrl+C to stop.")
-    while True:
-        frames = pipeline.wait_for_frames()
-        color_frame = frames.get_color_frame()
-        if color_frame:
-            print("Color frame detected.")
-except Exception as e:
-    print(f"Error: {e}")
-finally:
-    pipeline.stop()
+camera = cv2.VideoCapture('/dev/video0',cv2.CAP_V4L)  # Replace with your correct device
+if camera.isOpened():
+    ret, frame = camera.read()
+    if ret:
+        print("Camera works!")
+        cv2.imwrite("test_image.jpg", frame)
+    else:
+        print("Failed to capture frame")
+camera.release()
