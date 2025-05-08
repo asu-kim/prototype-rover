@@ -4,10 +4,10 @@ This is our repository of the working implementation of our prototype rover usin
 ## Demo Videos
 
 ### Rover working in the citrus farm
-[![Web Interface Demo]([https://www.youtube.com/watch?v=VIDEO_ID1](https://www.youtube.com/shorts/w_ep-jKaQc))
+[![Rover video ](https://img.youtube.com/vi/w_ep-jKaQc/0.jpg)](https://www.youtube.com/watch?v=w_ep-jKaQc)
 
 ### Fruit counting analysis application
-[![Rover Navigation Demo]([https://www.youtube.com/watch?v=VIDEO_ID2](https://www.youtube.com/shorts/kfau-Py49ds))
+[![Fruit counting application](https://img.youtube.com/vi/kfau-Py49ds/0.jpg)](https://www.youtube.com/watch?v=kfau-Py49ds)([https://www.youtube.com/watch?v=VIDEO_ID2](https://www.youtube.com/shorts/kfau-Py49ds))
 
 # Prerequisites 
 
