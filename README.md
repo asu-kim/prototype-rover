@@ -1,6 +1,14 @@
 # Overview
 This is our repository of the working implementation of our prototype rover using webpage
 
+## Demo Videos
+
+### Rover working in the citrus farm
+[![Web Interface Demo]([https://www.youtube.com/watch?v=VIDEO_ID1](https://www.youtube.com/shorts/w_ep-jKaQc))
+
+### Fruit counting analysis application
+[![Rover Navigation Demo]([https://www.youtube.com/watch?v=VIDEO_ID2](https://www.youtube.com/shorts/kfau-Py49ds))
+
 # Prerequisites 
 
 You need Python installed, as the main scripts are written in Python.
